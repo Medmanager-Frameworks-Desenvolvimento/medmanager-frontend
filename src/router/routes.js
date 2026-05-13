@@ -1,8 +1,8 @@
-import AuthLayout from '../layouts/AuthLayout.vue'
-import LoginView from '../views/LoginView.vue'
-import CadastroView from '../views/CadastroView.vue'
+import AuthLayout from '../layouts/auth/AuthLayout.vue'
+import LoginView from '../views/auth/LoginView.vue'
+import CadastroView from '../views/auth/CadastroView.vue'
 import MainLayout from '../layouts/MainLayout.vue'
-import DashboardView from '../views/DashboardView.vue'
+import DashboardView from '../views/dashboard/DashboardView.vue'
 
 const routes = [
   {

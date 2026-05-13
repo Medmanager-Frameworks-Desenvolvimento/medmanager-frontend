@@ -51,10 +51,10 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stored/auth'; 
-import BaseInput from '../components/BaseInput.vue';
-import BaseButton from '../components/BaseButton.vue';
-import BaseAlert from '../components/BaseAlert.vue';
+import { useAuthStore } from '../../stored/auth'; 
+import BaseInput from '../../components/auth/BaseInput.vue';
+import BaseButton from '../../components/auth/BaseButton.vue';
+import BaseAlert from '../../components/auth/BaseAlert.vue';
 import { User, Mail, Lock } from 'lucide-vue-next';
 
 const router = useRouter();

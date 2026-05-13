@@ -34,11 +34,11 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import BaseInput from '../components/BaseInput.vue';
-import BaseButton from '../components/BaseButton.vue';
-import BaseAlert from '../components/BaseAlert.vue';
+import BaseInput from '../../components/auth/BaseInput.vue';
+import BaseButton from '../../components/auth/BaseButton.vue';
+import BaseAlert from '../../components/auth/BaseAlert.vue';
 import { Mail, Lock } from 'lucide-vue-next';
-import { useAuthStore } from '../stored/auth'; 
+import { useAuthStore } from '../../stored/auth'; 
 
 const router = useRouter();
 const authStore = useAuthStore(); 
