@@ -52,10 +52,11 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { Users, AlertTriangle, Pill } from 'lucide-vue-next'; 
 import ChartCard from '../../components/dashboard/ChartCard.vue';
 import StatCard from '../../components/dashboard/StatCard.vue'; 
+import { api } from '../../services/api'; 
 
 const stats = reactive({
   totalPacientes: 0,
@@ -63,14 +64,14 @@ const stats = reactive({
   totalMedicamentos: 0
 });
 
-const barSeries = reactive([
+const barSeries = ref([
   {
     name: 'Prescrições',
-    data: [10, 20, 5] 
+    data: [] 
   }
 ]);
 
-const barOptions = reactive({
+const barOptions = ref({
   chart: {
     type: 'bar',
     toolbar: { show: false },
@@ -87,7 +88,7 @@ const barOptions = reactive({
   dataLabels: { enabled: false },
   legend: { show: false },
   xaxis: {
-    categories: ['Manhã', 'Tarde', 'Noite'],
+    categories: [], 
     axisBorder: { show: false },
     axisTicks: { show: false }
   },
@@ -97,14 +98,14 @@ const barOptions = reactive({
   }
 });
 
-const pieSeries = reactive([10, 30, 9]);
+const pieSeries = ref([]);
 
-const pieOptions = reactive({
+const pieOptions = ref({
   chart: {
     type: 'pie',
     fontFamily: 'inherit'
   },
-  labels: ['Diabetes', 'Hipertensão', 'Outras'],
+  labels: [],
   colors: ['#304e5e', '#79a2ba', '#739d8f'],
   stroke: {
     width: 2,
@@ -122,18 +123,54 @@ const pieOptions = reactive({
       fontWeight: 'bold',
     },
     dropShadow: { enabled: false }
-  }
+  },
+  tooltip: { enabled: true } 
 });
 
 onMounted(async () => {
-  
-  setTimeout(() => {
-    stats.totalPacientes = 15;
-    stats.pacientesSemMedicacao = 5;
-    stats.totalMedicamentos = 50;
+  try {
+    const response = await api.get('/prescricoes/resumo');
+    const dados = response.data;
 
-    barSeries[0].data = [11, 4, 12];
-    pieSeries.splice(0, pieSeries.length, 40, 45, 15);
-  }, 1000);
+    stats.totalPacientes = dados.pacientes;
+    stats.pacientesSemMedicacao = dados.pacientesNaoMedicados;
+    stats.totalMedicamentos = dados.medicamentos;
+
+    barSeries.value = [{
+      name: 'Prescrições',
+      data: dados.graficoTurnos.series
+    }];
+
+    barOptions.value = {
+      ...barOptions.value,
+      xaxis: {
+        ...barOptions.value.xaxis,
+        categories: dados.graficoTurnos.labels
+      }
+    };
+
+    if (dados.graficoDoencas.series.length > 0) {
+      pieSeries.value = dados.graficoDoencas.series;
+      
+      pieOptions.value = {
+        ...pieOptions.value,
+        labels: dados.graficoDoencas.labels,
+        colors: ['#304e5e', '#79a2ba', '#739d8f', '#eab308', '#ef4444'],
+        tooltip: { enabled: true }
+      };
+    } else {
+      pieSeries.value = [1];
+      
+      pieOptions.value = {
+        ...pieOptions.value,
+        labels: ['Sem dados'],
+        colors: ['#e5e7eb'],
+        tooltip: { enabled: false }
+      };
+    }
+
+  } catch (error) {
+    console.error('Erro ao buscar dados do dashboard:', error);
+  }
 });
 </script>
