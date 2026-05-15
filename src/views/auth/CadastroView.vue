@@ -54,7 +54,7 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../stored/auth'; 
 import BaseInput from '../../components/auth/BaseInput.vue';
 import BaseButton from '../../components/auth/BaseButton.vue';
-import BaseAlert from '../../components/auth/BaseAlert.vue';
+import BaseAlert from '../../components/common/BaseAlert.vue';
 import { User, Mail, Lock } from 'lucide-vue-next';
 
 const router = useRouter();
