@@ -36,7 +36,7 @@ import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import BaseInput from '../../components/auth/BaseInput.vue';
 import BaseButton from '../../components/auth/BaseButton.vue';
-import BaseAlert from '../../components/auth/BaseAlert.vue';
+import BaseAlert from '../../components/common/BaseAlert.vue';
 import { Mail, Lock } from 'lucide-vue-next';
 import { useAuthStore } from '../../stored/auth'; 
 
