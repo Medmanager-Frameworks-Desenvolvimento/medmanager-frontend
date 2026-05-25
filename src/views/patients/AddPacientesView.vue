@@ -95,7 +95,7 @@
           >
             Cancelar
           </button>
-          <PrimaryButton text="Salvar" type="submit" />
+          <PrimaryButton text="Salvar" type="submit" :disabled="salvando" />
         </div>
 
       </form>
@@ -133,6 +133,7 @@ const alertType = ref('error');
 const camposComErro = ref([]); 
 
 const isSuccessModalOpen = ref(false);
+const salvando = ref(false);
 
 const temErroNoCampo = (campo) => camposComErro.value.includes(campo);
 
@@ -150,9 +151,7 @@ const validarFormulario = () => {
   alertMessage.value = '';
 
   if (!form.nome.trim()) camposComErro.value.push('nome');
-  
   if (!form.cpf || form.cpf.length !== 14) camposComErro.value.push('cpf');
-  
   if (!form.idade || form.idade <= 0) camposComErro.value.push('idade');
 
   if (camposComErro.value.length > 0) {
@@ -171,6 +170,7 @@ const salvarPaciente = async () => {
   if (!validarFormulario()) return;
 
   try {
+    salvando.value = true;
     let doencasFinais = [...doencasSelecionadas.value];
     if (possuiOutra.value && outraDoencaTexto.value.trim() !== '') {
       doencasFinais.push(outraDoencaTexto.value.trim());
@@ -186,7 +186,6 @@ const salvarPaciente = async () => {
     await PacientesService.criar(payload);
     
     alertMessage.value = '';
-    
     isSuccessModalOpen.value = true;
 
     setTimeout(() => {
@@ -196,8 +195,17 @@ const salvarPaciente = async () => {
   } catch (error) {
     console.error("Erro ao salvar:", error);
     alertType.value = 'error';
-    alertMessage.value = 'Ocorreu um erro ao conectar com o servidor. Tente novamente.';
+    
+    if (error.response && error.response.data && error.response.data.message) {
+      const msg = error.response.data.message;
+      alertMessage.value = Array.isArray(msg) ? msg[0] : msg;
+    } else {
+      alertMessage.value = 'Ocorreu um erro interno no servidor (500). Verifique os dados.';
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  } finally {
+    salvando.value = false;
   }
 };
 </script>
