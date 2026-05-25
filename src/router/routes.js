@@ -6,6 +6,9 @@ import DashboardView from '../views/dashboard/DashboardView.vue'
 import PacientesView from '../views/patients/PacientesView.vue'
 import AddPacientesView from '../views/patients/AddPacientesView.vue'
 import EditarPacienteView from '../views/patients/EditarPacienteView.vue'
+import MedicamentosView from '../views/medications/MedicamentosView.vue'
+import AddMedicamentosView from '../views/medications/AddMedicamentosView.vue'
+import EditarMedicamentoView from '../views/medications/EditarMedicamentoView.vue'
 
 const routes = [
   {
@@ -48,6 +51,21 @@ const routes = [
         path: 'pacientes/:id/editar', 
         name: 'EditarPaciente', 
         component: EditarPacienteView
+      },
+      {
+        path: 'medicamentos',
+        name: 'Medicamentos',
+        component: MedicamentosView
+      },
+      {
+        path: 'medicamentos/novo',
+        name: 'AdicionarMedicamento',
+        component: AddMedicamentosView
+      }, 
+      {
+        path: 'medicamentos/:id/editar', 
+        name: 'EditarMedicamento', 
+        component: EditarMedicamentoView
       }
     ]
   }
