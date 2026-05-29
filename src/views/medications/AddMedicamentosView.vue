@@ -2,48 +2,65 @@
   <div class="max-w-4xl mx-auto">
     <h2 class="text-xl font-extrabold text-[#2b4c5e] mb-6">Adicionar Medicamento</h2>
 
-    <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+    <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm relative">
       
       <BaseAlert :message="alertMessage" :type="alertType" />
 
-      <form @submit.prevent="salvarMedicamento" class="space-y-8">
+      <div v-if="dropdownAberto" @click="fecharDropdowns" class="fixed inset-0 z-10"></div>
+
+      <form @submit.prevent="salvarMedicamento" class="space-y-8 relative z-20">
         
         <div class="space-y-6">
           
-          <div class="relative" ref="dropdownRef">
+          <div class="relative">
             <label class="block text-sm font-bold text-gray-900 mb-2">
               Nome <span class="text-red-500">*</span>
             </label>
-            <div class="relative">
-              <input 
-                type="text" 
-                v-model="searchNome"
-                @input="buscarNomes"
-                @focus="isDropdownOpen = true"
-                placeholder="Digite um nome" 
-                :class="[
-                  'w-full px-4 py-2.5 bg-white border rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2',
-                  temErroNoCampo('nome') ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : 'border-gray-300 focus:border-[#2b4c5e] focus:ring-[#2b4c5e]'
-                ]"
-              />
+            <div 
+              @click="abrirDropdown('nome')" 
+              :class="[
+                'w-full px-4 py-2.5 border rounded-lg text-sm flex justify-between items-center cursor-pointer transition-colors',
+                temErroNoCampo('nome') ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-white hover:border-gray-400'
+              ]"
+            >
+              <span :class="formulario.nome ? 'text-gray-900' : 'text-gray-400'">
+                {{ formulario.nome || 'Selecionar Medicamento' }}
+              </span>
+              <ChevronDown class="w-4 h-4 text-gray-400" />
             </div>
 
-            <ul 
-              v-if="isDropdownOpen && (resultadosCatalogo.length > 0 || carregandoCatalogo)" 
-              class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto"
-            >
-              <li v-if="carregandoCatalogo" class="px-4 py-3 text-sm text-gray-500 italic">
-                Buscando...
-              </li>
-              <li 
-                v-for="item in resultadosCatalogo" 
-                :key="item.nome_comercial"
-                @click="selecionarNome(item.nome_formatado)"
-                class="px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer border-b border-gray-50 last:border-0 transition-colors"
-              >
-                {{ item.nome_formatado }}
-              </li>
-            </ul>
+            <div v-if="dropdownAberto === 'nome'" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl z-30">
+              <div class="p-2 border-b border-gray-100">
+                <input 
+                  v-model="searchNome" 
+                  @input="buscarNomes"
+                  type="text" 
+                  class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-[#2b4c5e]" 
+                  placeholder="Pesquisar catálogo..." 
+                  autofocus 
+                />
+              </div>
+              <ul class="max-h-48 overflow-y-auto py-1">
+                <li v-if="carregandoCatalogo" class="px-4 py-3 text-sm text-gray-500 italic text-center">
+                  Buscando...
+                </li>
+                <li 
+                  v-else-if="resultadosCatalogo.length > 0"
+                  v-for="item in resultadosCatalogo" 
+                  :key="item.nome_comercial" 
+                  @click="selecionarNome(item.nome_formatado)" 
+                  class="px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer text-gray-700 border-b border-gray-50 last:border-0 transition-colors"
+                >
+                  {{ item.nome_formatado }}
+                </li>
+                <li v-else-if="searchNome.length >= 3 && !carregandoCatalogo" class="px-4 py-3 text-sm text-gray-500 text-center">
+                  Nenhum medicamento encontrado.
+                </li>
+                <li v-else class="px-4 py-3 text-sm text-gray-400 text-center">
+                  Digite pelo menos 3 letras para buscar.
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div>
@@ -67,8 +84,8 @@
             </label>
             <div 
               :class="[
-                'flex items-center w-full md:w-2/3 h-[42px] border rounded-lg overflow-hidden transition-colors focus-within:ring-2',
-                temErroNoCampo('quantidade') ? 'border-red-400 focus-within:border-red-400 focus-within:ring-red-200' : 'border-gray-300 focus-within:border-[#2b4c5e] focus-within:ring-[#2b4c5e]'
+                'flex items-center w-full md:w-2/3 h-[42px] border rounded-lg overflow-hidden transition-colors focus-within:ring-2 bg-white',
+                temErroNoCampo('quantidade') ? 'border-red-400 focus-within:border-red-400 focus-within:ring-red-200 bg-red-50' : 'border-gray-300 focus-within:border-[#2b4c5e] focus-within:ring-[#2b4c5e]'
               ]"
             >
               <button 
@@ -81,7 +98,7 @@
               <input 
                 type="number" 
                 v-model="formulario.quantidade"
-                class="flex-1 h-full w-full text-center text-sm text-gray-700 focus:outline-none appearance-none bg-white"
+                class="flex-1 h-full w-full text-center text-sm text-gray-700 focus:outline-none appearance-none bg-transparent"
                 min="0"
               />
               <button 
@@ -102,8 +119,8 @@
               type="date" 
               v-model="formulario.validade"
               :class="[
-                'w-full md:w-2/3 px-4 py-2.5 border rounded-lg text-sm text-gray-500 focus:outline-none focus:ring-2',
-                temErroNoCampo('validade') ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : 'border-gray-300 focus:border-[#2b4c5e] focus:ring-[#2b4c5e]'
+                'w-full md:w-2/3 px-4 py-2.5 border rounded-lg text-sm text-gray-500 focus:outline-none focus:ring-2 bg-white',
+                temErroNoCampo('validade') ? 'border-red-400 focus:border-red-400 focus:ring-red-200 bg-red-50' : 'border-gray-300 focus:border-[#2b4c5e] focus:ring-[#2b4c5e]'
               ]"
             />
           </div>
@@ -138,7 +155,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted } from 'vue';
+import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ChevronDown, Plus, Minus } from 'lucide-vue-next';
 import PrimaryButton from '../../components/common/PrimaryButton.vue';
@@ -161,6 +178,25 @@ const camposComErro = ref([]);
 const salvando = ref(false);
 
 const temErroNoCampo = (campo) => camposComErro.value.includes(campo);
+
+// Lógica de Dropdown
+const dropdownAberto = ref(null);
+const searchNome = ref('');
+const resultadosCatalogo = ref([]);
+const carregandoCatalogo = ref(false);
+
+const abrirDropdown = (tipo) => {
+  dropdownAberto.value = dropdownAberto.value === tipo ? null : tipo;
+  // Se abrir o dropdown de novo, foca a atenção na pesquisa
+  if (dropdownAberto.value) {
+    searchNome.value = '';
+    resultadosCatalogo.value = [];
+  }
+};
+
+const fecharDropdowns = () => {
+  dropdownAberto.value = null;
+};
 
 const formatarNome = (texto) => {
   if (!texto) return '';
@@ -185,27 +221,18 @@ const aumentarQuantidade = () => {
   formulario.quantidade = valorAtual + 1;
 };
 
-const searchNome = ref('');
-const resultadosCatalogo = ref([]);
-const isDropdownOpen = ref(false);
-const carregandoCatalogo = ref(false);
-const dropdownRef = ref(null);
-
+// Busca assíncrona na API
 let timeoutBusca = null;
 
 const buscarNomes = () => {
-  formulario.nome = searchNome.value;
-
   if (searchNome.value.length < 3) {
     resultadosCatalogo.value = [];
-    isDropdownOpen.value = false;
     return;
   }
 
   clearTimeout(timeoutBusca);
   timeoutBusca = setTimeout(async () => {
     carregandoCatalogo.value = true;
-    isDropdownOpen.value = true;
     try {
       const response = await MedicamentosService.buscarCatalogo(searchNome.value);
       resultadosCatalogo.value = response.data.map(item => ({
@@ -222,18 +249,9 @@ const buscarNomes = () => {
 };
 
 const selecionarNome = (nomeFormatado) => {
-  searchNome.value = nomeFormatado; 
   formulario.nome = nomeFormatado;  
-  isDropdownOpen.value = false;
+  fecharDropdowns();
 };
-
-const handleClickOutside = (event) => {
-  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-    isDropdownOpen.value = false;
-  }
-};
-onMounted(() => document.addEventListener('click', handleClickOutside));
-onUnmounted(() => document.removeEventListener('click', handleClickOutside));
 
 const isSuccessModalOpen = ref(false);
 
@@ -242,9 +260,7 @@ const validarFormulario = () => {
   alertMessage.value = '';
 
   if (!formulario.nome || formulario.nome.trim() === '') camposComErro.value.push('nome');
-  
   if (formulario.quantidade === null || formulario.quantidade === '') camposComErro.value.push('quantidade');
-
   if (!formulario.validade) camposComErro.value.push('validade');
 
   if (camposComErro.value.length > 0) {

@@ -10,6 +10,10 @@
       :items="medicamentosFiltrados"
       v-model:searchQuery="filtroTexto"
     >
+      <template #cell-descricao="{ item }">
+        <span>{{ item.descricao || '-' }}</span>
+      </template>
+
       <template #cell-validade="{ item }">
         <span>{{ formatarData(item.validade) }}</span>
       </template>
@@ -36,7 +40,7 @@
           </div>
           <div>
             <p class="font-bold mb-0.5">Descrição:</p>
-            <p>{{ medicamentoSelecionado.descricao }}</p>
+            <p>{{ medicamentoSelecionado.descricao || '-' }}</p>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
