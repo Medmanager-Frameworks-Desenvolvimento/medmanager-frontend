@@ -181,7 +181,6 @@ const salvando = ref(false);
 
 const temErroNoCampo = (campo) => camposComErro.value.includes(campo);
 
-// Lógica do Dropdown
 const dropdownAberto = ref(null);
 const searchNome = ref('');
 const resultadosCatalogo = ref([]);
@@ -189,7 +188,6 @@ const carregandoCatalogo = ref(false);
 
 const abrirDropdown = (tipo) => {
   dropdownAberto.value = dropdownAberto.value === tipo ? null : tipo;
-  // Se abrir, limpa a busca pra forçar o usuário a digitar de novo se quiser alterar
   if (dropdownAberto.value) {
     searchNome.value = '';
     resultadosCatalogo.value = [];
@@ -248,7 +246,6 @@ const aumentarQuantidade = () => {
   formulario.quantidade = valorAtual + 1;
 };
 
-// Busca Assíncrona na API
 let timeoutBusca = null;
 
 const buscarNomes = () => {
