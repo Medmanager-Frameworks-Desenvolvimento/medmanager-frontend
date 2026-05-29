@@ -46,7 +46,10 @@
           </div>
           <div>
             <p class="font-bold mb-0.5">Doença Crônica:</p>
-            <ul v-if="pacienteSelecionado.doenca_cronica && pacienteSelecionado.doenca_cronica.length > 0">
+            <ul 
+              v-if="pacienteSelecionado.doenca_cronica && pacienteSelecionado.doenca_cronica.length > 0"
+              class="max-h-16 overflow-y-auto pr-2"
+            >
               <li v-for="(doenca, index) in pacienteSelecionado.doenca_cronica" :key="index" class="mb-1">
                 {{ doenca }}
               </li>
