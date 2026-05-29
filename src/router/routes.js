@@ -12,6 +12,9 @@ import EditarMedicamentoView from '../views/medications/EditarMedicamentoView.vu
 import EnfermeirosView from '../views/nurses/EnfermeirosView.vue'
 import AddEnfermeirosView from '../views/nurses/AddEnfermeirosView.vue'
 import EditarEnfermeiroView from '../views/nurses/EditarEnfermeiroView.vue'
+import PrescricoesView from '../views/prescriptions/PrescricoesView.vue'
+import AddPrescricaoView from '../views/prescriptions/AddPrescricaoView.vue'
+import EditarPrescricaoView from '../views/prescriptions/EditarPrescricaoView.vue'
 
 const routes = [
   {
@@ -84,6 +87,21 @@ const routes = [
         path: 'enfermeiros/:id/editar',
         name: 'EditarEnfermeiro',
         component: EditarEnfermeiroView
+      },
+      {
+        path: 'prescricoes',
+        name: 'Prescricoes',
+        component: PrescricoesView
+      },
+      {
+        path: 'prescricoes/nova',
+        name: 'AdicionarPrescricao',
+        component: AddPrescricaoView
+      },
+      {
+        path: 'prescricoes/:id/editar',
+        name: 'EditarPrescricao',
+        component: EditarPrescricaoView
       }
     ]
   }
