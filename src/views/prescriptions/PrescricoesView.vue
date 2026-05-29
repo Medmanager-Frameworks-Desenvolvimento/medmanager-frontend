@@ -18,7 +18,7 @@
         <div class="relative">
           <button 
             @click="isFilterOpen = !isFilterOpen"
-            class="flex items-center gap-3 px-5 py-2.5 bg-white border border-[#a8a8a8] rounded-xl text-sm font-medium text-[#a8a8a8] hover:bg-gray-50 hover:border-gray-500 hover:text-gray-500 transition-colors focus:outline-none"
+            class="flex items-center gap-3 px-5 py-2.5 bg-white border border-gray-300 rounded-xl text-sm font-medium text-[#a8a8a8] hover:bg-gray-50 hover:border-gray-500 hover:text-gray-500 transition-colors focus:outline-none"
           >
             <ListFilter class="w-4 h-4" stroke-width="2" />
             Filtrar
