@@ -15,6 +15,7 @@ import EditarEnfermeiroView from '../views/nurses/EditarEnfermeiroView.vue'
 import PrescricoesView from '../views/prescriptions/PrescricoesView.vue'
 import AddPrescricaoView from '../views/prescriptions/AddPrescricaoView.vue'
 import EditarPrescricaoView from '../views/prescriptions/EditarPrescricaoView.vue'
+import ConfigView from '../views/settings/ConfigView.vue'
 
 const routes = [
   {
@@ -102,6 +103,11 @@ const routes = [
         path: 'prescricoes/:id/editar',
         name: 'EditarPrescricao',
         component: EditarPrescricaoView
+      },
+      {
+        path: 'configuracoes',
+        name: 'Configuracoes',
+        component: ConfigView
       }
     ]
   }

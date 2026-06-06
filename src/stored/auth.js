@@ -27,6 +27,24 @@ export const useAuthStore = defineStore('auth', {
       return resposta.data; 
     },
 
+    async updateProfile(payload) {
+      const idAdmin = this.admin.id;
+
+      const resposta = await api.patch(`/admin/${idAdmin}`, payload); 
+      
+      if (resposta.data && resposta.data.user) {
+        this.admin = resposta.data.user;
+      } else if (resposta.data) {
+        this.admin = resposta.data;
+      } else {
+        this.admin = { ...this.admin, nome: payload.nome, email: payload.email };
+      }
+
+      localStorage.setItem('admin_user', JSON.stringify(this.admin));
+      
+      return resposta.data;
+    },
+
     logout() {
       this.token = null;
       this.admin = null;
