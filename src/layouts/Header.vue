@@ -37,28 +37,38 @@
         </div>
       </div>
 
-      <button @click="handleLogout" title="Sair do sistema" class="text-red-400 hover:text-red-600 transition">
-        <Power class="w-5 h-5" />
+      <button @click="isLogoutModalOpen = true" class="text-red-500 hover:text-red-700">
+        <Power class="w-6 h-6" />
       </button>
 
+      <LogoutModal 
+        :is-open="isLogoutModalOpen"
+        @close="isLogoutModalOpen = false"
+        @confirm="fazerLogout"
+      />
+      
     </div>
   </header>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stored/auth';
+import { useAuthStore } from '../stored/auth'; 
 import { Bell, Power } from 'lucide-vue-next';
+import LogoutModal from '../components/common/LogoutModal.vue'; 
 
 const router = useRouter();
 const authStore = useAuthStore();
 
+const isLogoutModalOpen = ref(false);
+
 const adminName = computed(() => authStore.admin?.nome || 'Administrador');
 const initial = computed(() => adminName.value.charAt(0).toUpperCase());
 
-const handleLogout = () => {
+const fazerLogout = () => {
   authStore.logout();
-  router.push('/login');
+  isLogoutModalOpen.value = false;
+  router.replace('/login');
 };
 </script>
