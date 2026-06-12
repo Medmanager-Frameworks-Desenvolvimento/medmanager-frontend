@@ -184,7 +184,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'; // Adicionado watch
+import { ref, onMounted, computed, watch } from 'vue'; 
 import { useRouter } from 'vue-router';
 import { Plus, Search, ListFilter, MoreVertical, User, Pill, Eye, Pencil, Trash2 } from 'lucide-vue-next';
 import PrimaryButton from '../../components/common/PrimaryButton.vue';
@@ -193,8 +193,10 @@ import DeletedModal from '../../components/common/DeletedModal.vue';
 import SuccessModal from '../../components/common/SuccessModal.vue';
 import ViewPrescricaoModal from '../../components/prescriptions/PrescriptionModal.vue'; 
 import PrescricoesService from '../../services/prescricoes';
+import { useNotificationStore } from '../../stored/notifications';
 
 const router = useRouter();
+const notificacaoStore = useNotificationStore();
 
 const prescricoes = ref([]);
 const searchQuery = ref('');
@@ -309,10 +311,14 @@ const salvarStatusMedicacao = async (novoStatus) => {
 
   try {
     salvandoStatus.value = true;
-    
+
     await PrescricoesService.atualizar(prescricaoSelecionada.value.id, {
       tomou_medicacao: novoStatus
     });
+
+    if (novoStatus === true) {
+      notificacaoStore.removerNotificacaoPorPrescricao(prescricaoSelecionada.value.id);
+    }
 
     isViewModalOpen.value = false;
     isSuccessModalOpen.value = true;

@@ -21,8 +21,15 @@
 
     <div class="flex items-center space-x-6">
       
-      <button class="text-gray-400 hover:text-[#2b4c5e] transition">
+      <button @click="isNotificationsModalOpen = true" class="relative text-gray-400 hover:text-[#2b4c5e] transition">
         <Bell class="w-5 h-5" />
+        <span 
+          v-if="notificacaoStore.naoLidas > 0" 
+          class="absolute -top-1 -right-1 flex h-3 w-3"
+        >
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white"></span>
+        </span>
       </button>
 
       <div class="h-8 w-px bg-gray-300"></div>
@@ -47,21 +54,32 @@
         @confirm="fazerLogout"
       />
       
+      <NotificationsModal 
+        :is-open="isNotificationsModalOpen"
+        @close="isNotificationsModalOpen = false"
+      />
+      <NotificationToast />
+
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stored/auth'; 
+import { useNotificationStore } from '../stored/notifications.js';
 import { Bell, Power } from 'lucide-vue-next';
 import LogoutModal from '../components/common/LogoutModal.vue'; 
+import NotificationsModal from '../components/common/NotificationsModal.vue';
+import NotificationToast from '../components/common/NotificationToast.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const notificacaoStore = useNotificationStore(); 
 
 const isLogoutModalOpen = ref(false);
+const isNotificationsModalOpen = ref(false); 
 
 const adminName = computed(() => authStore.admin?.nome || 'Administrador');
 const initial = computed(() => adminName.value.charAt(0).toUpperCase());
@@ -71,4 +89,12 @@ const fazerLogout = () => {
   isLogoutModalOpen.value = false;
   router.replace('/login');
 };
+
+onMounted(() => {
+  notificacaoStore.conectarSocket();
+});
+
+onUnmounted(() => {
+  notificacaoStore.desconectarSocket();
+});
 </script>
