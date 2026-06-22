@@ -46,7 +46,7 @@ Este repositório contém a aplicação client-side responsável por fornecer a 
 
 - Clone o repositório utilizando o comando:
 ```bash
-git clone [https://github.com/Medmanager-Frameworks-Desenvolvimento/medmanager-frontend.git](https://github.com/Medmanager-Frameworks-Desenvolvimento/medmanager-frontend.git)
+git clone https://github.com/Medmanager-Frameworks-Desenvolvimento/medmanager-frontend.git
 ```
 
 - Acesse o diretório do projeto:
